@@ -5,12 +5,12 @@ import { buscarTreinos } from "../service/api";
 import type { TreinoResumo } from "../types/treino";
 
 const FOTO_DESTAQUE =
-  "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900";
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9F-YEkAJ7LTm-q2Crl6ZxzI9Y1RaT_w0sZHDvUA-YZgDz74S9_FmPOLU&s=10";
 
 const FOTOS_TREINOS = [
-  "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500",
-  "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500",
-  "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500",
+  "https://www.hipertrofia.org/blog/wp-content/uploads/2023/09/barbell-incline-bench-press.gif",
+  "https://i.pinimg.com/originals/7e/d3/fd/7ed3fd50a771c125a2fe8adcf3b7eae4.gif",
+  "https://i.pinimg.com/originals/c2/8e/10/c28e10ce7b5cde07f21afdd0eaeeb26d.gif",
 ];
 
 export default function HomeScreen() {
@@ -23,7 +23,7 @@ export default function HomeScreen() {
   useEffect(() => {
     buscarTreinos()
       .then(setTreinos)
-      .catch(() => setErro("Não foi possível conectar à academia."))
+      .catch(() => setErro(""))
       .finally(() => setCarregando(false));
   }, []);
 
@@ -34,7 +34,7 @@ export default function HomeScreen() {
         <Text style={styles.subtitulo}>seu site de treinos</Text>
 
         <View style={styles.atalhos}>
-          <Text style={styles.atalhoAtivo}>♡ Meus Treinos</Text>
+          <Text style={styles.atalhoAtivo}> Meus Treinos</Text>
 
           <Pressable onPress={() => router.push("/treinos")}>
             <Text style={styles.atalho}>◷ Histórico</Text>
@@ -97,8 +97,6 @@ export default function HomeScreen() {
           <View>
             <Text style={styles.erro}>{erro}</Text>
             <Text style={styles.aviso}>
-              Confira se a API está rodando e se o IP está correto em
-              src/services/api.ts.
             </Text>
           </View>
         ) : (
@@ -141,7 +139,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D2233",
+    backgroundColor: "#000000",
   },
   header: {
     paddingHorizontal: 20,
@@ -166,15 +164,15 @@ const styles = StyleSheet.create({
   },
   atalhoAtivo: {
     color: "#E8E5FF",
-    backgroundColor: "#172F45",
+    backgroundColor: "#1c1d1d",
     borderRadius: 25,
     overflow: "hidden",
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
   atalho: {
-    color: "#94A8BB",
-    backgroundColor: "#142B40",
+    color: "#d7d1d8",
+    backgroundColor: "#1c1d1d",
     borderRadius: 25,
     overflow: "hidden",
     paddingVertical: 10,
@@ -194,12 +192,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 18,
     justifyContent: "space-between",
-    backgroundColor: "rgba(5, 19, 31, 0.52)",
+    backgroundColor: "rgba(70, 83, 95, 0.52)",
     borderRadius: 18,
   },
   tag: {
     color: "#FFFFFF",
-    backgroundColor: "#8067FF",
+    backgroundColor: "#8067FF87",
     overflow: "hidden",
     alignSelf: "flex-start",
     paddingHorizontal: 12,
@@ -242,8 +240,8 @@ const styles = StyleSheet.create({
   diaCard: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#142C42",
-    borderColor: "#203B52",
+    backgroundColor: "#1c1d1d",
+    borderColor: "#2e2f30",
     borderWidth: 1,
     borderRadius: 16,
     paddingVertical: 10,
