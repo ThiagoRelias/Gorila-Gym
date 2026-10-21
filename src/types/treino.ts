@@ -7,10 +7,9 @@ export type Exercicio = {
 export type TreinoResumo = {
   id: number;
   name: string;
-  level: string;
   duration: number;
   muscleGroup: string;
-  exerciseCount: number;
+  imageUrl?: string;
 };
 
 export type Treino = {
