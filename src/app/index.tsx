@@ -4,14 +4,7 @@ import { ActivityIndicator, FlatList, ImageBackground, Pressable, ScrollView, St
 import { buscarTreinos } from "../service/api";
 import type { TreinoResumo } from "../types/treino";
 
-const FOTO_DESTAQUE =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9F-YEkAJ7LTm-q2Crl6ZxzI9Y1RaT_w0sZHDvUA-YZgDz74S9_FmPOLU&s=10";
-
-const FOTOS_TREINOS = [
-  "https://www.hipertrofia.org/blog/wp-content/uploads/2023/09/barbell-incline-bench-press.gif",
-  "https://i.pinimg.com/originals/7e/d3/fd/7ed3fd50a771c125a2fe8adcf3b7eae4.gif",
-  "https://i.pinimg.com/originals/c2/8e/10/c28e10ce7b5cde07f21afdd0eaeeb26d.gif",
-];
+const FOTO_DESTAQUE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC_-mmf4N7BdoMHO5JtO9cICudf3gpinkUo-kci1OCS_-deBJwQ-IOWVZC&s=10";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -23,7 +16,9 @@ export default function HomeScreen() {
   useEffect(() => {
     buscarTreinos()
       .then(setTreinos)
-      .catch(() => setErro(""))
+      .catch((error) => {
+        setErro(error.message || "Não foi possível carregar os treinos.");
+      })
       .finally(() => setCarregando(false));
   }, []);
 
@@ -34,7 +29,7 @@ export default function HomeScreen() {
         <Text style={styles.subtitulo}>seu site de treinos</Text>
 
         <View style={styles.atalhos}>
-          <Text style={styles.atalhoAtivo}> Meus Treinos</Text>
+          <Text style={styles.atalhoAtivo}>Meus Treinos</Text>
 
           <Pressable onPress={() => router.push("/treinos")}>
             <Text style={styles.atalho}>◷ Histórico</Text>
@@ -50,6 +45,7 @@ export default function HomeScreen() {
         >
           <View style={styles.sombra}>
             <Text style={styles.tag}>Destaque</Text>
+
             <View style={styles.textoDestaque}>
               <Text style={styles.tituloDestaque}>Treino de força</Text>
               <Text style={styles.descricaoDestaque}>
@@ -70,22 +66,34 @@ export default function HomeScreen() {
             ["Ter", "Costas"],
             ["Qua", "Pernas"],
             ["Qui", "Ombros"],
-          ].map(([dia, grupo], index) => (
-            <View style={styles.diaCard} key={dia}>
-              <Text style={styles.diaTexto}>{dia}</Text>
-              <Text style={styles.grupoTexto}>{grupo}</Text>
+          ].map(([dia, grupo]) => {
+            const treino = treinos.find(
+              (item) =>
+                item.muscleGroup?.toLowerCase() === grupo.toLowerCase()
+            );
 
-              <ImageBackground
-                source={{ uri: FOTOS_TREINOS[index % FOTOS_TREINOS.length] }}
-                style={styles.fotoDia}
-                imageStyle={{ borderRadius: 30 }}
-              />
-            </View>
-          ))}
+            return (
+              <View style={styles.diaCard} key={dia}>
+                <Text style={styles.diaTexto}>{dia}</Text>
+                <Text style={styles.grupoTexto}>{grupo}</Text>
+
+                {treino?.imageUrl ? (
+                  <ImageBackground
+                    source={{ uri: treino.imageUrl }}
+                    style={styles.fotoDia}
+                    imageStyle={styles.imagemRedonda}
+                  />
+                ) : (
+                  <View style={styles.fotoDiaVazia} />
+                )}
+              </View>
+            );
+          })}
         </View>
 
         <View style={styles.tituloLinha}>
           <Text style={styles.tituloSecao}>Treinos do mês</Text>
+
           <Pressable onPress={() => router.push("/treinos")}>
             <Text style={styles.verTodos}>Ver todos ›</Text>
           </Pressable>
@@ -94,32 +102,35 @@ export default function HomeScreen() {
         {carregando ? (
           <ActivityIndicator color="#8067FF" size="large" />
         ) : erro ? (
-          <View>
-            <Text style={styles.erro}>{erro}</Text>
-            <Text style={styles.aviso}>
-            </Text>
-          </View>
+          <Text style={styles.erro}>{erro}</Text>
+        ) : treinos.length === 0 ? (
+          <Text style={styles.aviso}>Nenhum treino cadastrado ainda.</Text>
         ) : (
           <FlatList
             data={treinos.slice(0, 4)}
             horizontal
+            scrollEnabled
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => String(item.id)}
-            renderItem={({ item, index }) => (
+            renderItem={({ item }) => (
               <Pressable
                 style={styles.treinoCard}
                 onPress={() => router.push("/treinos")}
               >
-                <ImageBackground
-                  source={{
-                    uri: FOTOS_TREINOS[index % FOTOS_TREINOS.length],
-                  }}
-                  style={styles.fotoTreino}
-                  imageStyle={{ borderRadius: 12 }}
-                />
+                {item.imageUrl ? (
+                  <ImageBackground
+                    source={{ uri: item.imageUrl }}
+                    style={styles.fotoTreino}
+                    imageStyle={styles.imagemCard}
+                  />
+                ) : (
+                  <View style={styles.fotoTreinoVazia} />
+                )}
+
                 <Text style={styles.nomeTreino} numberOfLines={2}>
                   {item.name}
                 </Text>
+
                 <Text style={styles.infoTreino}>
                   {item.duration} min · {item.muscleGroup}
                 </Text>
@@ -183,17 +194,19 @@ const styles = StyleSheet.create({
   },
   destaque: {
     height: 190,
-    justifyContent: "space-between",
+    borderRadius: 18,
+    overflow: "hidden",
+    backgroundColor: "#343A40",
   },
   imagemDestaque: {
     borderRadius: 18,
+    opacity: 0.55,
   },
   sombra: {
     flex: 1,
     padding: 18,
     justifyContent: "space-between",
-    backgroundColor: "rgba(70, 83, 95, 0.52)",
-    borderRadius: 18,
+    backgroundColor: "rgba(30, 35, 40, 0.35)",
   },
   tag: {
     color: "#FFFFFF",
@@ -262,6 +275,15 @@ const styles = StyleSheet.create({
     width: 43,
     height: 43,
   },
+  imagemRedonda: {
+    borderRadius: 30,
+  },
+  fotoDiaVazia: {
+    width: 43,
+    height: 43,
+    borderRadius: 30,
+    backgroundColor: "#222527",
+  },
   verTodos: {
     color: "#8B75FF",
     fontSize: 13,
@@ -269,7 +291,7 @@ const styles = StyleSheet.create({
   },
   treinoCard: {
     width: 170,
-    backgroundColor: "#142C42",
+    backgroundColor: "#1c1d1d",
     borderRadius: 15,
     padding: 10,
     marginRight: 12,
@@ -278,6 +300,15 @@ const styles = StyleSheet.create({
   fotoTreino: {
     height: 112,
     width: "100%",
+  },
+  imagemCard: {
+    borderRadius: 12,
+  },
+  fotoTreinoVazia: {
+    height: 112,
+    width: "100%",
+    borderRadius: 12,
+    backgroundColor: "#222527",
   },
   nomeTreino: {
     color: "#E1EDF7",

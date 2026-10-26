@@ -1,23 +1,7 @@
-export type Exercicio = {
-  name: string;
-  sets: number;
-  reps: string;
-};
+import { useRouter } from "expo-router";
+const FOTO_TREINO =
+  "https://www.hipertrofia.org/blog/wp-content/uploads/2019/05/pulldown.gif";
 
-export type TreinoResumo = {
-  id: number;
-  name: string;
-  level: string;
-  duration: number;
-  muscleGroup: string;
-  exerciseCount: number;
-};
-
-export type Treino = {
-  id: number;
-  name: string;
-  level: string;
-  duration: number;
-  muscleGroup: string;
-  exercises: Exercicio[];
-};
+export default function TreinosScreen() {
+  const router = useRouter();
+}
