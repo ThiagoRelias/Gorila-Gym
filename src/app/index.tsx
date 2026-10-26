@@ -4,7 +4,8 @@ import { ActivityIndicator, FlatList, ImageBackground, Pressable, ScrollView, St
 import { buscarTreinos } from "../service/api";
 import type { TreinoResumo } from "../types/treino";
 
-const FOTO_DESTAQUE = "https://static.vecteezy.com/ti/fotos-gratis/p2/71528347-peso-treinamento-equipamento-as-academia-interior-ginastica-exercite-se-gratis-foto.jpg";
+const FOTO_DESTAQUE =
+  "https://static.vecteezy.com/ti/fotos-gratis/p2/71528347-peso-treinamento-equipamento-as-academia-interior-ginastica-exercite-se-gratis-foto.jpg";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -21,6 +22,13 @@ export default function HomeScreen() {
       })
       .finally(() => setCarregando(false));
   }, []);
+
+  function abrirTreino(id: number) {
+    router.push({
+      pathname: "/treinos",
+      params: { id: String(id) },
+    });
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -69,11 +77,16 @@ export default function HomeScreen() {
           ].map(([dia, grupo]) => {
             const treino = treinos.find(
               (item) =>
-                item.muscleGroup?.toLowerCase() === grupo.toLowerCase()
+                item.muscleGroup?.trim().toLowerCase() ===
+                grupo.toLowerCase()
             );
 
             return (
-              <View style={styles.diaCard} key={dia}>
+              <Pressable
+                style={styles.diaCard}
+                key={dia}
+                onPress={() => treino && abrirTreino(treino.id)}
+              >
                 <Text style={styles.diaTexto}>{dia}</Text>
                 <Text style={styles.grupoTexto}>{grupo}</Text>
 
@@ -86,7 +99,7 @@ export default function HomeScreen() {
                 ) : (
                   <View style={styles.fotoDiaVazia} />
                 )}
-              </View>
+              </Pressable>
             );
           })}
         </View>
@@ -106,7 +119,6 @@ export default function HomeScreen() {
         ) : treinos.length === 0 ? (
           <Text style={styles.aviso}>Nenhum treino cadastrado ainda.</Text>
         ) : (
-
           <FlatList
             data={treinos.filter((treino) => treino.id !== 1).slice(0, 4)}
             horizontal
@@ -116,7 +128,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <Pressable
                 style={styles.treinoCard}
-                onPress={() => router.push("/treinos")}
+                onPress={() => abrirTreino(item.id)}
               >
                 {item.imageUrl ? (
                   <ImageBackground
@@ -140,6 +152,7 @@ export default function HomeScreen() {
           />
         )}
       </View>
+
       <View style={styles.rodape}>
         <Text style={styles.rodapeTexto}>GORILA GYM · BORA TREINAR</Text>
       </View>

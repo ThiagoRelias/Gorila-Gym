@@ -1,56 +1,47 @@
-# Welcome to your Expo app 👋
+# Gorila Gym
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo mobile para consulta de treinos de academia, desenvolvido com React Native e Expo, integrado a uma API para exibir treinos e exercícios.
 
-## Get started
+## Tecnologias utilizadas
 
-1. Install dependencies
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- API REST
 
-   ```bash
-   npm install
-   ```
+## Funcionalidades
 
-2. Start the app
+- Visualização dos treinos disponíveis.
+- Exibição dos detalhes de cada treino.
+- Consulta de exercícios, séries e repetições.
+- Exibição de imagens dos exercícios.
+- Navegação entre a tela inicial e os detalhes dos treinos.
 
-   ```bash
-   npx expo start
-   ```
+## API
 
-In the output, you'll find options to open the app in a
+O aplicativo consome uma API REST para buscar informações sobre os treinos e seus exercícios.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Para conectar corretamente, configure o endereço IP da API no arquivo `src/service/api.ts`.
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Objetivo
 
-## Get a fresh project
+Projeto desenvolvido para fins educacionais, com o objetivo de praticar desenvolvimento mobile, integração com APIs REST e navegação entre telas.
 
-When you're ready, run:
+## Funções no projeto 
 
-```bash
-npm run reset-project
-```
+# Arthur
+- Didign do figma
+- criação da api
+- criação dos metodos POST e GET
+- ajuda na criação da estrutura do projeto
+- estrutura do banco(junto ao thiago)
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Thiago
+- ideia inicial do figma 
+- criação do app expo 
+- Ajuste na estrutura da api 
+- criação do banco de dados
+- estrutura do banco(junto ao arthur)
+- configuração dos metodos POST e GET
+- registro dos dados no swagger
