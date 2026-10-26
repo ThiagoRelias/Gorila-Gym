@@ -2,6 +2,7 @@ export type Exercicio = {
   name: string;
   sets: number;
   reps: string;
+  imageUrl?: string;
 };
 
 export type TreinoResumo = {
@@ -18,5 +19,6 @@ export type Treino = {
   level: string;
   duration: number;
   muscleGroup: string;
+  imageUrl?: string;
   exercises: Exercicio[];
 };

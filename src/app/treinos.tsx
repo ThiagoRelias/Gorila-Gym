@@ -51,11 +51,6 @@ export default function TreinosScreen() {
             <Text style={styles.logo}>Gorila Gym</Text>
             <Text style={styles.subtitulo}>Treinos do dia</Text>
           </View>
-
-          <View style={styles.iconesHeader}>
-            <Text style={styles.icone}>♧</Text>
-            <Text style={styles.icone}>♙</Text>
-          </View>
         </View>
 
         <ImageBackground

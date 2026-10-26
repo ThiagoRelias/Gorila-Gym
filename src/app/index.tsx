@@ -4,7 +4,7 @@ import { ActivityIndicator, FlatList, ImageBackground, Pressable, ScrollView, St
 import { buscarTreinos } from "../service/api";
 import type { TreinoResumo } from "../types/treino";
 
-const FOTO_DESTAQUE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC_-mmf4N7BdoMHO5JtO9cICudf3gpinkUo-kci1OCS_-deBJwQ-IOWVZC&s=10";
+const FOTO_DESTAQUE = "https://static.vecteezy.com/ti/fotos-gratis/p2/71528347-peso-treinamento-equipamento-as-academia-interior-ginastica-exercite-se-gratis-foto.jpg";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -106,8 +106,9 @@ export default function HomeScreen() {
         ) : treinos.length === 0 ? (
           <Text style={styles.aviso}>Nenhum treino cadastrado ainda.</Text>
         ) : (
+
           <FlatList
-            data={treinos.slice(0, 4)}
+            data={treinos.filter((treino) => treino.id !== 1).slice(0, 4)}
             horizontal
             scrollEnabled
             showsHorizontalScrollIndicator={false}
@@ -139,7 +140,6 @@ export default function HomeScreen() {
           />
         )}
       </View>
-
       <View style={styles.rodape}>
         <Text style={styles.rodapeTexto}>GORILA GYM · BORA TREINAR</Text>
       </View>
