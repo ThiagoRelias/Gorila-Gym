@@ -31,7 +31,7 @@ Projeto desenvolvido para fins educacionais, com o objetivo de praticar desenvol
 ## Funções no projeto 
 
 # Arthur
-- Didign do figma
+- Design do figma
 - criação da api
 - criação dos metodos POST e GET
 - ajuda na criação da estrutura do projeto
