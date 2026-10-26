@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, } from "react-native";
+import { ActivityIndicator, FlatList, Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, } from "react-native";
 import { buscarTreinos } from "../service/api";
 import type { TreinoResumo } from "../types/treino";
 
@@ -22,25 +22,34 @@ export default function HomeScreen() {
       })
       .finally(() => setCarregando(false));
   }, []);
-
   function abrirTreino(id: number) {
     router.push({
       pathname: "/treinos",
       params: { id: String(id) },
     });
   }
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.logo}>Gorila Gym</Text>
-        <Text style={styles.subtitulo}>seu site de treinos</Text>
+        <View style={styles.logoLinha}>
+          <View style={styles.logoWrapper}>
+            <Image
+              source={require("../../assets/images/gorila_gym_logo_icone.png")}
+              style={styles.logo}
+              resizeMode="cover"
+            />
+          </View>
+          <View style={styles.logoTextos}>
+            <Text style={styles.tituloLogo}>Gorila Gym</Text>
+            <Text style={styles.subtitulo}>Seu aplicativo de treinos</Text>
+          </View>
+        </View>
 
         <View style={styles.atalhos}>
           <Text style={styles.atalhoAtivo}>Meus Treinos</Text>
 
           <Pressable onPress={() => router.push("/treinos")}>
-            <Text style={styles.atalho}>◷ Histórico</Text>
+            <Text style={styles.atalho}>Histórico</Text>
           </Pressable>
         </View>
       </View>
@@ -77,8 +86,7 @@ export default function HomeScreen() {
           ].map(([dia, grupo]) => {
             const treino = treinos.find(
               (item) =>
-                item.muscleGroup?.trim().toLowerCase() ===
-                grupo.toLowerCase()
+                item.muscleGroup?.trim().toLowerCase() === grupo.toLowerCase()
             );
 
             return (
@@ -170,15 +178,36 @@ const styles = StyleSheet.create({
     paddingTop: 55,
     paddingBottom: 20,
   },
+  logoLinha: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  // Recorta as bordas/cantos brancos do logo
+  logoWrapper: {
+    width: 65,
+    height: 65,
+    borderRadius: 16,
+    overflow: "hidden",
+    backgroundColor: "#000000",
+  },
   logo: {
-    color: "#E3F1FC",
-    fontSize: 29,
+    width: "100%",
+    height: "100%",
+    transform: [{ scale: 1.12 }], // aumente para 1.15 ou 1.2 se ainda aparecer branco
+  },
+  logoTextos: {
+    flex: 1,
+  },
+  tituloLogo: {
+    color: "#FFFFFF",
+    fontSize: 25,
     fontWeight: "800",
   },
   subtitulo: {
     color: "#8FA6B9",
-    fontSize: 14,
-    marginTop: 5,
+    fontSize: 13,
+    marginTop: 4,
   },
   atalhos: {
     flexDirection: "row",
