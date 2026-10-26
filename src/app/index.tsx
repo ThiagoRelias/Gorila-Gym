@@ -5,7 +5,7 @@ import { buscarTreinos } from "../service/api";
 import type { TreinoResumo } from "../types/treino";
 
 const FOTO_DESTAQUE =
-  "https://static.vecteezy.com/ti/fotos-gratis/p2/71528347-peso-treinamento-equipamento-as-academia-interior-ginastica-exercite-se-gratis-foto.jpg";
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzVWXMigh0Ah5nEox_pqvZhDUsMgL1Oa9czjIWXmUUDNFt9c0ykdH0CoTO&s=10";
 
 export default function HomeScreen() {
   const router = useRouter();
