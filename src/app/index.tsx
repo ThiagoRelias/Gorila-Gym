@@ -41,16 +41,12 @@ export default function HomeScreen() {
           </View>
           <View style={styles.logoTextos}>
             <Text style={styles.tituloLogo}>Gorila Gym</Text>
-            <Text style={styles.subtitulo}>Seu aplicativo de treinos</Text>
+            <Text style={styles.subtitulo}>Seu auxiliar de treinos</Text>
           </View>
         </View>
 
         <View style={styles.atalhos}>
           <Text style={styles.atalhoAtivo}>Meus Treinos</Text>
-
-          <Pressable onPress={() => router.push("/treinos")}>
-            <Text style={styles.atalho}>Histórico</Text>
-          </Pressable>
         </View>
       </View>
 
