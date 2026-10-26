@@ -1,4 +1,5 @@
 export type Exercicio = {
+  id: number;
   name: string;
   sets: number;
   reps: string;
