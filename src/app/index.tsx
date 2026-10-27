@@ -1,7 +1,11 @@
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, } from "react-native";
 import { buscarTreinos } from "../service/api";
+import {
+  alternarFavorito,
+  buscarFavoritos,
+} from "../service/favoritos";
 import type { TreinoResumo } from "../types/treino";
 
 const FOTO_DESTAQUE =
@@ -10,9 +14,21 @@ const FOTO_DESTAQUE =
 export default function HomeScreen() {
   const router = useRouter();
 
+  const [idsFavoritos, setIdsFavoritos] = useState<number[]>([]);
   const [treinos, setTreinos] = useState<TreinoResumo[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+
+  const carregarFavoritos = useCallback(async () => {
+    const favoritos = await buscarFavoritos();
+    setIdsFavoritos(favoritos);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      carregarFavoritos();
+    }, [carregarFavoritos])
+  );
 
   useEffect(() => {
     buscarTreinos()
@@ -22,12 +38,23 @@ export default function HomeScreen() {
       })
       .finally(() => setCarregando(false));
   }, []);
+
   function abrirTreino(id: number) {
     router.push({
       pathname: "/treinos",
       params: { id: String(id) },
     });
   }
+
+  async function alternarTreinoFavorito(id: number) {
+    try {
+      const atualizados = await alternarFavorito(id);
+      setIdsFavoritos(atualizados);
+    } catch {
+      setErro("Não foi possível atualizar os favoritos.");
+    }
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -35,10 +62,11 @@ export default function HomeScreen() {
           <View style={styles.logoWrapper}>
             <Image
               source={require("../../assets/images/gorila_gym_logo_icone.png")}
-              style={styles.logo}
+              style={styles.logoImagem}
               resizeMode="cover"
             />
           </View>
+
           <View style={styles.logoTextos}>
             <Text style={styles.tituloLogo}>Gorila Gym</Text>
             <Text style={styles.subtitulo}>Seu auxiliar de treinos</Text>
@@ -46,7 +74,19 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.atalhos}>
-          <Text style={styles.atalhoAtivo}>Meus Treinos</Text>
+          <Pressable
+            style={styles.atalhoAtivo}
+            onPress={() => router.replace("/")}
+          >
+            <Text style={styles.textoAtalhoAtivo}>Meus Treinos</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.atalho}
+            onPress={() => router.push("/favoritos")}
+          >
+            <Text style={styles.textoAtalho}>Favoritos</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -82,7 +122,8 @@ export default function HomeScreen() {
           ].map(([dia, grupo]) => {
             const treino = treinos.find(
               (item) =>
-                item.muscleGroup?.trim().toLowerCase() === grupo.toLowerCase()
+                item.muscleGroup?.trim().toLowerCase() ===
+                grupo.toLowerCase()
             );
 
             return (
@@ -121,7 +162,9 @@ export default function HomeScreen() {
         ) : erro ? (
           <Text style={styles.erro}>{erro}</Text>
         ) : treinos.length === 0 ? (
-          <Text style={styles.aviso}>Nenhum treino cadastrado ainda.</Text>
+          <Text style={styles.aviso}>
+            Nenhum treino cadastrado ainda.
+          </Text>
         ) : (
           <FlatList
             data={treinos.filter((treino) => treino.id !== 1).slice(0, 4)}
@@ -129,36 +172,64 @@ export default function HomeScreen() {
             scrollEnabled
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => (
-              <Pressable
-                style={styles.treinoCard}
-                onPress={() => abrirTreino(item.id)}
-              >
-                {item.imageUrl ? (
-                  <ImageBackground
-                    source={{ uri: item.imageUrl }}
-                    style={styles.fotoTreino}
-                    imageStyle={styles.imagemCard}
-                  />
-                ) : (
-                  <View style={styles.fotoTreinoVazia} />
-                )}
+            renderItem={({ item }) => {
+              const favorito = idsFavoritos.includes(item.id);
 
-                <Text style={styles.nomeTreino} numberOfLines={2}>
-                  {item.name}
-                </Text>
+              return (
+                <View style={styles.treinoCard}>
+                  <Pressable
+                    style={styles.conteudoCard}
+                    onPress={() => abrirTreino(item.id)}
+                  >
+                    {item.imageUrl ? (
+                      <ImageBackground
+                        source={{ uri: item.imageUrl }}
+                        style={styles.fotoTreino}
+                        imageStyle={styles.imagemCard}
+                      />
+                    ) : (
+                      <View style={styles.fotoTreinoVazia} />
+                    )}
 
-                <Text style={styles.infoTreino}>
-                  {item.duration} min · {item.muscleGroup}
-                </Text>
-              </Pressable>
-            )}
+                    <Text style={styles.nomeTreino} numberOfLines={2}>
+                      {item.name}
+                    </Text>
+
+                    <Text style={styles.infoTreino}>
+                      {item.duration} min · {item.muscleGroup}
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    style={styles.botaoFavorito}
+                    onPress={() => alternarTreinoFavorito(item.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      favorito
+                        ? "Remover dos favoritos"
+                        : "Adicionar aos favoritos"
+                    }
+                  >
+                    <Text
+                      style={[
+                        styles.coracao,
+                        favorito && styles.coracaoAtivo,
+                      ]}
+                    >
+                      {favorito ? "♥" : "♡"}
+                    </Text>
+                  </Pressable>
+                </View>
+              );
+            }}
           />
         )}
       </View>
 
       <View style={styles.rodape}>
-        <Text style={styles.rodapeTexto}>GORILA GYM · BORA TREINAR</Text>
+        <Text style={styles.rodapeTexto}>
+          GORILA GYM · BORA TREINAR
+        </Text>
       </View>
     </ScrollView>
   );
@@ -179,7 +250,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  // Recorta as bordas/cantos brancos do logo
   logoWrapper: {
     width: 65,
     height: 65,
@@ -187,10 +257,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#000000",
   },
-  logo: {
+  logoImagem: {
     width: "100%",
     height: "100%",
-    transform: [{ scale: 1.12 }], // aumente para 1.15 ou 1.2 se ainda aparecer branco
+    transform: [{ scale: 1.12 }],
   },
   logoTextos: {
     flex: 1,
@@ -212,20 +282,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   atalhoAtivo: {
-    color: "#E8E5FF",
-    backgroundColor: "#1c1d1d",
+    backgroundColor: "#8067FF",
     borderRadius: 25,
-    overflow: "hidden",
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
+  textoAtalhoAtivo: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+  },
   atalho: {
-    color: "#d7d1d8",
     backgroundColor: "#1c1d1d",
     borderRadius: 25,
-    overflow: "hidden",
     paddingVertical: 10,
     paddingHorizontal: 15,
+  },
+  textoAtalho: {
+    color: "#D7D1D8",
   },
   conteudo: {
     paddingHorizontal: 18,
@@ -335,6 +408,9 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginBottom: 15,
   },
+  conteudoCard: {
+    flex: 1,
+  },
   fotoTreino: {
     height: 112,
     width: "100%",
@@ -359,6 +435,18 @@ const styles = StyleSheet.create({
     fontSize: 11,
     marginTop: 5,
     marginBottom: 5,
+  },
+  botaoFavorito: {
+    alignSelf: "flex-end",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  coracao: {
+    color: "#A4A4B0",
+    fontSize: 25,
+  },
+  coracaoAtivo: {
+    color: "#A78BFA",
   },
   erro: {
     color: "#FF9A9A",
