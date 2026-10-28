@@ -2,10 +2,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, } from "react-native";
 import { buscarTreinos } from "../service/api";
-import {
-  alternarFavorito,
-  buscarFavoritos,
-} from "../service/favoritos";
+import { alternarFavorito, buscarFavoritos, } from "../service/favoritos";
 import type { TreinoResumo } from "../types/treino";
 
 const FOTO_DESTAQUE =
@@ -216,7 +213,7 @@ export default function HomeScreen() {
                         favorito && styles.coracaoAtivo,
                       ]}
                     >
-                      {favorito ? "♥" : "♡"}
+                      {favorito ? "★" : "☆"}
                     </Text>
                   </Pressable>
                 </View>

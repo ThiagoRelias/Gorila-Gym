@@ -1,3 +1,4 @@
+
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, } from "react-native";
@@ -230,9 +231,7 @@ export default function TreinosScreen() {
                     />
                   ) : (
                     <View style={styles.fotoSemImagem}>
-                      <Text style={styles.textoSemImagem}>
-                        Sem imagem
-                      </Text>
+                      <Text style={styles.textoSemImagem}>Sem imagem</Text>
                     </View>
                   )}
 
@@ -246,9 +245,7 @@ export default function TreinosScreen() {
                     </Text>
 
                     {concluido && (
-                      <Text style={styles.textoConcluido}>
-                        Concluído
-                      </Text>
+                      <Text style={styles.textoConcluido}>Concluído</Text>
                     )}
                   </View>
 
@@ -269,7 +266,7 @@ export default function TreinosScreen() {
                         favorito && styles.iconeFavoritoAtivo,
                       ]}
                     >
-                      {favorito ? "♥" : "♡"}
+                      {favorito ? "★" : "☆"}
                     </Text>
                   </Pressable>
 

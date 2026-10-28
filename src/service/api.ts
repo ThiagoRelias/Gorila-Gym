@@ -1,6 +1,6 @@
 import type { Exercicio, Treino, TreinoResumo } from "../types/treino";
 
-const API_URL = "http://10.92.198.26:3000/api/treinos";
+const API_URL = "http://10.92.198.16:3000/api/workouts";
 
 function normalizarImagem(item: any) {
   return {
