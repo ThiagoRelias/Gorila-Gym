@@ -1,4 +1,3 @@
-
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, } from "react-native";
@@ -23,10 +22,6 @@ export default function TreinosScreen() {
     Record<string, string>
   >({});
   const [exerciciosConcluidos, setExerciciosConcluidos] = useState<
-    Record<string, boolean>
-  >({});
-  const [treinoFavorito, setTreinoFavorito] = useState(false);
-  const [exerciciosFavoritos, setExerciciosFavoritos] = useState<
     Record<string, boolean>
   >({});
   const [carregando, setCarregando] = useState(true);
@@ -74,8 +69,6 @@ export default function TreinosScreen() {
           setImagensExercicios(imagens);
           setTreinoSelecionado(detalhe);
           setExerciciosConcluidos({});
-          setExerciciosFavoritos({});
-          setTreinoFavorito(false);
         }
       } catch (error) {
         if (ativo) {
@@ -111,17 +104,6 @@ export default function TreinosScreen() {
 
   function alternarConclusao(chave: string) {
     setExerciciosConcluidos((estadoAtual) => ({
-      ...estadoAtual,
-      [chave]: !estadoAtual[chave],
-    }));
-  }
-
-  function alternarFavoritoTreino() {
-    setTreinoFavorito((atual) => !atual);
-  }
-
-  function alternarFavoritoExercicio(chave: string) {
-    setExerciciosFavoritos((estadoAtual) => ({
       ...estadoAtual,
       [chave]: !estadoAtual[chave],
     }));
@@ -165,36 +147,9 @@ export default function TreinosScreen() {
               <View style={styles.sombra}>
                 <View style={styles.informacoesTopo}>
                   <Text style={styles.tag}>Treino do dia</Text>
-
-                  <View style={styles.acoesTopo}>
-                    <Text style={styles.duracao}>
-                      {treinoSelecionado.duration} min
-                    </Text>
-
-                    <Pressable
-                      style={[
-                        styles.botaoFavoritoTreino,
-                        treinoFavorito && styles.botaoFavoritoTreinoAtivo,
-                      ]}
-                      onPress={alternarFavoritoTreino}
-                      accessibilityRole="button"
-                      accessibilityState={{ selected: treinoFavorito }}
-                      accessibilityLabel={
-                        treinoFavorito
-                          ? "Remover treino dos favoritos"
-                          : "Adicionar treino aos favoritos"
-                      }
-                    >
-                      <Text
-                        style={[
-                          styles.iconeFavorito,
-                          treinoFavorito && styles.iconeFavoritoAtivo,
-                        ]}
-                      >
-                        {treinoFavorito ? "★" : "☆"}
-                      </Text>
-                    </Pressable>
-                  </View>
+                  <Text style={styles.duracao}>
+                    {treinoSelecionado.duration} min
+                  </Text>
                 </View>
 
                 <View>
@@ -219,7 +174,6 @@ export default function TreinosScreen() {
               const imagem = obterImagem(exercicio);
               const chave = `${treinoSelecionado.id}-${exercicio.id ?? exercicio.name}-${index}`;
               const concluido = Boolean(exerciciosConcluidos[chave]);
-              const favorito = Boolean(exerciciosFavoritos[chave]);
 
               return (
                 <View style={styles.exercicioCard} key={chave}>
@@ -248,27 +202,6 @@ export default function TreinosScreen() {
                       <Text style={styles.textoConcluido}>Concluído</Text>
                     )}
                   </View>
-
-                  <Pressable
-                    style={styles.botaoFavorito}
-                    onPress={() => alternarFavoritoExercicio(chave)}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: favorito }}
-                    accessibilityLabel={
-                      favorito
-                        ? `Remover ${exercicio.name} dos favoritos`
-                        : `Adicionar ${exercicio.name} aos favoritos`
-                    }
-                  >
-                    <Text
-                      style={[
-                        styles.iconeFavorito,
-                        favorito && styles.iconeFavoritoAtivo,
-                      ]}
-                    >
-                      {favorito ? "★" : "☆"}
-                    </Text>
-                  </Pressable>
 
                   <Pressable
                     style={styles.check}
@@ -351,11 +284,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  acoesTopo: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
   tag: {
     color: "#FFFFFF",
     backgroundColor: "#8B5CF6",
@@ -370,20 +298,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 12,
     fontWeight: "600",
-  },
-  botaoFavoritoTreino: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "rgba(0, 0, 0, 0.45)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.25)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  botaoFavoritoTreinoAtivo: {
-    backgroundColor: "rgba(139, 92, 246, 0.25)",
-    borderColor: "#8B5CF6",
   },
   tituloDestaque: {
     color: "#FFFFFF",
@@ -463,21 +377,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
     marginTop: 5,
-  },
-  botaoFavorito: {
-    width: 34,
-    height: 34,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 4,
-  },
-  iconeFavorito: {
-    color: "#A4A4B0",
-    fontSize: 22,
-    lineHeight: 26,
-  },
-  iconeFavoritoAtivo: {
-    color: "#8B5CF6",
   },
   check: {
     width: 34,
